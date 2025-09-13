@@ -1,10 +1,10 @@
 #ifndef GESTOR_H
 #define GESTOR_H
 
-#include "Alumno.h"       
+#include "Alumno.h"
 #include "Curso.h"
 #include "Inscripcion.h"
-#include "LinkedList.h"   
+#include "LinkedList.h"
 
 class Gestor {
 private:
@@ -25,6 +25,13 @@ public:
 
     void inscribirAlumno();
     void eliminarInscripcion();
+
+    void agregarNota();
+
+    void cursosDeAlumno();
+    void promedioAlumnoEnCurso();
+    void promedioGeneralAlumno();
+    void alumnosPorCarrera();
 
     void mostrarAlumnos();
     void mostrarCursos();

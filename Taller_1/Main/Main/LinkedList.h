@@ -4,14 +4,14 @@
 #include <iostream>
 using namespace std;
 
-// Nodo genérico
+
 template <typename T>
 struct Nodo {
     T dato;
     Nodo* sig = nullptr;
 };
 
-// Lista enlazada genérica
+
 template <typename T>
 class LinkedList {
 private:
@@ -24,12 +24,12 @@ public:
         tam = 0;
     }
 
-    // Obtener cabeza
+
     Nodo<T>* getCabeza() {
         return cabeza;
     }
 
-    // Agregar al final
+
     void agregar(T valor) {
         Nodo<T>* nuevo = new Nodo<T>;
         nuevo->dato = valor;
@@ -48,7 +48,7 @@ public:
         tam++;
     }
 
-    // Eliminar alumno por ID (para Alumno)
+
     bool eliminarPorId(int id) {
         Nodo<T>* actual = cabeza;
         Nodo<T>* anterior = NULL;
@@ -71,12 +71,12 @@ public:
         return false;
     }
 
-    // Eliminar nodo con aux y anterior
+
     bool eliminarNodo(Nodo<T>* aux, Nodo<T>* anterior) {
         if (aux == NULL) return false;
 
         if (anterior == NULL) {
-            // Si es la cabeza
+           
             cabeza = aux->sig;
         }
         else {
@@ -88,7 +88,7 @@ public:
         return true;
     }
 
-    // Buscar alumno por ID
+
     T* buscarPorId(int id) {
         Nodo<T>* aux = cabeza;
         while (aux != NULL) {
@@ -100,7 +100,7 @@ public:
         return NULL;
     }
 
-    // Mostrar todos con operador <<
+
     void mostrarTodo() {
         Nodo<T>* aux = cabeza;
         while (aux != NULL) {
@@ -109,7 +109,6 @@ public:
         }
     }
 
-    // Mostrar todos usando método mostrar() (para Alumno)
     void mostrarTodos() {
         Nodo<T>* aux = cabeza;
         while (aux != NULL) {
@@ -118,14 +117,13 @@ public:
         }
     }
 
-    // Mostrar todos usando método mostrar() (para Inscripcion)
     void mostrarTodosInscripciones() {
         Nodo<T>* aux = cabeza;
         while (aux != NULL) {
-            aux->dato.mostrar();  // <<--- llama a Inscripcion::mostrar()
+            aux->dato.mostrar();
             aux = aux->sig;
         }
     }
 };
 
-#endif // LINKEDLIST_H
+#endif 

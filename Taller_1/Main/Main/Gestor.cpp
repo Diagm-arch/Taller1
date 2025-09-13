@@ -4,7 +4,7 @@ using namespace std;
 
 Gestor::Gestor() {}
 
-//// ======== CRUD Alumnos ========
+
 void Gestor::agregarAlumno() {
     int id;
     string nombre, apellido, carrera, fecha;
@@ -42,7 +42,7 @@ void Gestor::eliminarAlumno() {
     else cout << "No existe alumno con ese ID.\n";
 }
 
-//// ======== CRUD Cursos ========
+
 void Gestor::agregarCurso() {
     string codigo, nombre, carrera, profesor;
     int maxEst;
@@ -63,7 +63,6 @@ void Gestor::buscarCurso() {
     cout << "Codigo del curso: ";
     cin >> codigo;
 
-    // Buscamos manualmente (porque LinkedList no tiene buscar por string)
     Nodo<Curso>* aux = cursos.getCabeza();
     while (aux != NULL) {
         if (aux->dato.codigo == codigo) {
@@ -95,7 +94,7 @@ void Gestor::eliminarCurso() {
     cout << "Curso no encontrado.\n";
 }
 
-//// ======== Inscripciones ========
+
 void Gestor::inscribirAlumno() {
     int id;
     string codigo;
@@ -108,7 +107,7 @@ void Gestor::inscribirAlumno() {
         return;
     }
 
-    // Validamos curso
+
     Nodo<Curso>* aux = cursos.getCabeza();
     Curso* cursoPtr = NULL;
     while (aux != NULL) {
@@ -123,7 +122,7 @@ void Gestor::inscribirAlumno() {
         return;
     }
 
-    // Validar carrera
+
     if (cursoPtr->carrera != a->carrera) {
         cout << "Alumno no puede inscribirse en otra carrera.\n";
         return;
@@ -155,7 +154,107 @@ void Gestor::eliminarInscripcion() {
     cout << "No existe inscripcion con esos datos.\n";
 }
 
-//// ======== Mostrar ========
+
+void Gestor::agregarNota() {
+    int id;
+    string codigo;
+    double nota;
+
+    cout << "ID alumno: "; cin >> id;
+    cout << "Codigo curso: "; cin >> codigo;
+
+    Nodo<Inscripcion>* aux = inscripciones.getCabeza();
+    while (aux != NULL) {
+        if (aux->dato.alumnoId == id && aux->dato.cursoCodigo == codigo) {
+            cout << "Nota (1.0 a 7.0): ";
+            cin >> nota;
+            if (nota < 1.0 || nota > 7.0) {
+                cout << "Nota invalida.\n";
+                return;
+            }
+            aux->dato.agregarNota(nota);
+            cout << "Nota agregada.\n";
+            return;
+        }
+        aux = aux->sig;
+    }
+    cout << "Inscripcion no encontrada.\n";
+}
+
+
+void Gestor::cursosDeAlumno() {
+    int id;
+    cout << "ID alumno: ";
+    cin >> id;
+
+    Nodo<Inscripcion>* aux = inscripciones.getCabeza();
+    bool encontrado = false;
+    while (aux != NULL) {
+        if (aux->dato.alumnoId == id) {
+            cout << "Curso inscrito: " << aux->dato.cursoCodigo << endl;
+            encontrado = true;
+        }
+        aux = aux->sig;
+    }
+    if (!encontrado) cout << "Alumno no tiene cursos inscritos.\n";
+}
+
+void Gestor::promedioAlumnoEnCurso() {
+    int id;
+    string codigo;
+    cout << "ID alumno: "; cin >> id;
+    cout << "Codigo curso: "; cin >> codigo;
+
+    Nodo<Inscripcion>* aux = inscripciones.getCabeza();
+    while (aux != NULL) {
+        if (aux->dato.alumnoId == id && aux->dato.cursoCodigo == codigo) {
+            cout << "Promedio en curso " << codigo << ": " << aux->dato.promedio() << endl;
+            return;
+        }
+        aux = aux->sig;
+    }
+    cout << "No se encontro inscripcion.\n";
+}
+
+void Gestor::promedioGeneralAlumno() {
+    int id;
+    cout << "ID alumno: ";
+    cin >> id;
+
+    Nodo<Inscripcion>* aux = inscripciones.getCabeza();
+    double suma = 0;
+    int cursos = 0;
+
+    while (aux != NULL) {
+        if (aux->dato.alumnoId == id) {
+            suma += aux->dato.promedio();
+            cursos++;
+        }
+        aux = aux->sig;
+    }
+
+    if (cursos == 0) cout << "Alumno sin cursos inscritos.\n";
+    else cout << "Promedio general del alumno: " << (suma / cursos) << endl;
+}
+
+void Gestor::alumnosPorCarrera() {
+    string carrera;
+    cout << "Carrera: ";
+    cin >> carrera;
+
+    Nodo<Alumno>* aux = alumnos.getCabeza();
+    bool encontrado = false;
+    while (aux != NULL) {
+        if (aux->dato.carrera == carrera) {
+            aux->dato.mostrar();
+            encontrado = true;
+        }
+        aux = aux->sig;
+    }
+    if (!encontrado) cout << "No hay alumnos en esa carrera.\n";
+}
+
+
 void Gestor::mostrarAlumnos() {
     alumnos.mostrarTodos();
 }
@@ -168,7 +267,7 @@ void Gestor::mostrarInscripciones() {
     inscripciones.mostrarTodosInscripciones();
 }
 
-//// ======== Menu ========
+
 void Gestor::menu() {
     int opcion;
     do {
@@ -184,6 +283,11 @@ void Gestor::menu() {
         cout << "9. Mostrar Alumnos\n";
         cout << "10. Mostrar Cursos\n";
         cout << "11. Mostrar Inscripciones\n";
+        cout << "12. Agregar Nota\n";
+        cout << "13. Cursos de un Alumno\n";
+        cout << "14. Promedio Alumno en Curso\n";
+        cout << "15. Promedio General de Alumno\n";
+        cout << "16. Alumnos por Carrera\n";
         cout << "0. Salir\n";
         cout << "Opcion: ";
         cin >> opcion;
@@ -200,6 +304,11 @@ void Gestor::menu() {
         case 9: mostrarAlumnos(); break;
         case 10: mostrarCursos(); break;
         case 11: mostrarInscripciones(); break;
+        case 12: agregarNota(); break;
+        case 13: cursosDeAlumno(); break;
+        case 14: promedioAlumnoEnCurso(); break;
+        case 15: promedioGeneralAlumno(); break;
+        case 16: alumnosPorCarrera(); break;
         case 0: cout << "Saliendo...\n"; break;
         default: cout << "Opcion invalida\n";
         }
