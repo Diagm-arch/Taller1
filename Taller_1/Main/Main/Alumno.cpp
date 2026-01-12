@@ -24,3 +24,6 @@ void Alumno::mostrar() {
         << ", Carrera: " << carrera
         << ", Ingreso: " << fechaIngreso << endl;
 }
+
+
+asghdasdhl
